@@ -12,23 +12,19 @@ int* generateSparseMatrix(int m, int n, double s, int* col_ind, int* row_ptr){
 
     for(int i = 0; i< size; i++){
         M[i] =(int) rand()+1; 
-        //cout<< "element" << M[i]<<endl;
         while (c < size && r < m )
         {
             if(col_i == n){
                 row_ptr[r] = row_p;
-                cout<<"here "<<row_p<<endl;
                 col_i = 0;
                 r++;
             }
             ran = rand() % m*n + 1;
-            cout<<"c and r "<<c<<" "<<r<<endl;
             if( ran < m*n*s){
                 col_ind[c] = col_i;
                 row_p++;
                 col_i++;
                 c++;
-                //cout<<"done"<<endl;
                 break;
             }
             col_i++;
@@ -60,21 +56,10 @@ int main(int argc, char* args[]){
     int* rowA = (int*) malloc((m)*sizeof(int));
     int* A = generateSparseMatrix(m, n, sa, colA, rowA);
 
-    int* colA = (int*) malloc(size*sizeof(int));
-    int* rowA = (int*) malloc((m)*sizeof(int));
-    int* B = generateSparseMatrix(m, n, sa, colA, rowA);
+    size = (int)(n*p*sb);
 
-    for(int i = 0; i < (int)(m*n*sa) ; i++){
-        cout<< A[i] << " ";
-    }
-    cout<<"\n";
-    for(int i = 0; i < (int)(m*n*sa) ; i++){
-        cout<< colA[i] << " ";
-    }
-    cout<<"\n";for(int i = 0; i < (int)(m) ; i++){
-        cout<< rowA[i] << " ";
-    }
-    cout<<"\n";
-
+    int* colB = (int*) malloc(size*sizeof(int));
+    int* rowB = (int*) malloc((n)*sizeof(int));
+    int* B = generateSparseMatrix(n, p, sb, colB, rowB);
 
 }
