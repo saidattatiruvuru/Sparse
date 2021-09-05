@@ -100,6 +100,7 @@ int main(int argc, char* args[]){
     int* col_ptrB  = (int*) malloc((p)*sizeof(int));
     int* B = generateSparseMatrix(p, n, sb, row_indB, col_ptrB, &SizeB);
 
+/*
     printCSR(A, col_indA, row_ptrA, m, n);
     for(int i = 0; i < SizeA ; i++){
         cout<< A[i] << " ";
@@ -129,10 +130,13 @@ int main(int argc, char* args[]){
     cout<<endl;
     cout<<"____________"<<endl;
 
+    */
 
-    int* C = (int*) malloc(m*p);
+    clock_t s1, e1, s2, e2;
+    int* C = (int*) malloc(m*p*sizeof(int));
     int element = 0;
     int c=0, r=0;
+    s1 = clock();
     for(int i = 0; i < m; i++){
         for(int j = 0; j < p; j++){
             element = 0;
@@ -147,9 +151,65 @@ int main(int argc, char* args[]){
                 }
                 c++;
             }
-            cout<<element<<"  ";
+            //cout<<element<<"  ";
         }
-        cout<<endl;
+        //cout<<endl;
     }
+    e1 = clock();
+    int next = 0;
+    c = r = 0;
+    int* AMat = (int*) malloc(m*n*sizeof(int));
+    int* BMat = (int*) malloc(n*p*sizeof(int));
+    for(int i = 0; i<m ; i++){
+        next = 0;
+        for(int j = 0; j<n;j++){
+            if(col_indA[c] == j && next != 1){
+                AMat[i*n + j] = A[c];
+                c++;
+                r++;
+                if(r == row_ptrA[i]){
+                    next = 1;
+                }
+            }
+            else{
+                AMat[i*n + j] = 0;
+            }
+        }
+        //cout<<endl;
+    }
+    c = 0;
+    r = 0;
+    for(int i = 0; i<n ; i++){
+        next = 0;
+        for(int j = 0; j<p;j++){
+            if(row_indB[c] == j && next != 1){
+                BMat[i + j*n] = B[c];
+                c++;
+                r++;
+                if(r == col_ptrB[i]){
+                    next = 1;
+                }
+            }
+            else{
+                BMat[i + j*n] = 0;
+            }
+        }
+        //cout<<endl;
+    }
+    
+    
+    int* CMat = (int*) malloc(m*p*sizeof(int));
+    s2 = clock();
+    for(int i=0; i<m; i++){
+        for(int j=0; j<p; j++){
+            element = 0;
+            for(int k=0; k<n; k++){
+                element += A[i*n + k] + B[k*p + j];
+            }
+            CMat[i*p + j] = element;
+        }
+    }
+    e2 = clock();
 
+    cout<<"Sparse implementation "<<(e1-s1)<<"     Normal "<<(e2-s2)<<endl;
 }
